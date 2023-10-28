@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Markdown Editor</title>
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #1a1a1a;
+        font-family: Arial, sans-serif;
+        color: #e0e0e0;
+        margin: 0;
+    }
+
+    h1 {
+        color: #ffffff;
+        background-color: #333333;
+        padding: 10px;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        background-color: #333333;
+        color: #e0e0e0;
+        resize: none;
+    }
+
+    input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #2980b9;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px; /* Add margin to separate the buttons vertically */
+    }
+
+    #preview {
+        margin: 20px;
+        padding: 10px;
+        border: 1px solid #333333;
+        border-radius: 5px;
+        background-color: #333333;
+        color: #e0e0e0;
+        overflow-y: scroll;
+        max-height: 300px;
+        white-space: pre-line;
+    }
+
+    #save-button {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        #preview {
+            max-height: 150px;
+        }
+    }
+</style>
+<h1>Markdown Editor</h1>
+<form id="markdown-form">
+    <textarea name="markdown" id="markdown" rows="10" cols="80" placeholder="Enter Markdown"></textarea>
+    <br>
+    <input type="submit" value="Preview" id="preview-button">
+    <button id="save-button">Save to Device</button>
+</form>
+<h2>Preview:</h2>
+<div id="preview"></div>
+<script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+<script>
+    const form = document.getElementById('markdown-form');
+    const markdownTextarea = document.getElementById('markdown');
+    const preview = document.getElementById('preview');
+    const saveButton = document.getElementById('save-button');
+    const converter = new showdown.Converter();
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const markdown = markdownTextarea.value;
+        const html = converter.makeHtml(markdown);
+        preview.innerHTML = html;
+    });
+
+    saveButton.addEventListener('click', () => {
+        const markdown = markdownTextarea.value;
+        const blob = new Blob([markdown], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'document.md';
+        a.click();
+    });
+
+    // Initial rendering
+    form.dispatchEvent(new Event('submit'));
+</script>
+</body>
+</html>
